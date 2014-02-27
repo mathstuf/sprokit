@@ -17,7 +17,7 @@ cd "$this_dir"
 "$git" rev-parse --is-inside-work-tree 2> /dev/null || \
   die "Does not seem to be a git repository."
 
-git_dir="$( git rev-parse --git-dir )"
+git_dir="$( "$git" rev-parse --git-dir )"
 hook_dir="$git_dir/gerrit"
 
 cd "$hook_dir"
