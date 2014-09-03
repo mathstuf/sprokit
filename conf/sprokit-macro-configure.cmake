@@ -111,8 +111,10 @@ function (sprokit_configure_file name source dest)
 endfunction ()
 
 function (sprokit_configure_file_always name source dest)
-  set(extra_output
-    "${dest}.noexist")
+  if (NOT CMAKE_GENERATOR STREQUAL "Unix Makefiles")
+    set(extra_output
+      "${dest}.noexist")
+  endif ()
 
   sprokit_configure_file(${name} "${source}" "${dest}" ${ARGN})
 endfunction ()
