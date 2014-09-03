@@ -2,7 +2,7 @@ set(hooks_directory
   "${sprokit_source_dir}/.git/hooks")
 
 add_custom_command(
-  OUTPUT  "${hooks_directory}/.git"
+  OUTPUT  "${hooks_directory}/.git/HEAD"
   COMMAND "${GIT_EXECUTABLE}"
           init
           --quiet
