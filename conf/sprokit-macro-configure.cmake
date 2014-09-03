@@ -29,40 +29,48 @@
 add_custom_target(configure ALL)
 
 function (_sprokit_configure_file name source dest)
-  file(WRITE "${configure_script}"
+  set(tmp_file "${configure_script}.tmp")
+
+  file(WRITE "${tmp_file}"
     "# Configure script for \"${source}\" -> \"${dest}\"\n")
 
   foreach (arg IN LISTS ARGN)
-    file(APPEND "${configure_script}"
+    file(APPEND "${tmp_file}"
       "set(${arg} \"${${arg}}\")\n")
   endforeach ()
 
-  file(APPEND "${configure_script}" "${configure_code}")
+  file(APPEND "${tmp_file}" "${configure_code}")
 
-  file(APPEND "${configure_script}" "
+  file(APPEND "${tmp_file}" "
 configure_file(
   \"${source}\"
   \"${configured_path}\"
   @ONLY)\n")
 
-  file(APPEND "${configure_script}" "
+  file(APPEND "${tmp_file}" "
 configure_file(
   \"${configured_path}\"
   \"${dest}\"
   COPYONLY)\n")
 
   foreach (extra_dest IN LISTS sprokit_configure_extra_dests)
-    file(APPEND "${configure_script}" "
+    file(APPEND "${tmp_file}" "
 configure_file(
   \"${configured_path}\"
   \"${extra_dest}\"
   COPYONLY)\n")
   endforeach ()
 
+  configure_file(
+    "${tmp_file}"
+    "${configure_script}"
+    COPYONLY)
+
   set(clean_files
     "${dest}"
     ${sprokit_configure_extra_dests}
     "${configured_path}"
+    "${tmp_file}"
     "${configure_script}")
 
   set_directory_properties(
